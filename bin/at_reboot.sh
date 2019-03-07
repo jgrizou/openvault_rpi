@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# schedule this script with cron
+# run in terminal: crontab -e
+# add: @reboot ~/workspace/openvault_rpi/bin/at_reboot.sh
+
 chrome_log_file=/home/pi/workspace/openvault_rpi/logs/chrome.log
 flask_log_file=/home/pi/workspace/openvault_rpi/logs/flask.log
 url=https://jgrizou.com
