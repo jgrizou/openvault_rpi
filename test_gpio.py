@@ -9,7 +9,7 @@ PIN = 21
 
 GPIO.setup(PIN, GPIO.OUT)
 
-for i in range(10):
+for i in range(1):
 	print(i)
 	GPIO.output(PIN, GPIO.HIGH)
 	time.sleep(1)

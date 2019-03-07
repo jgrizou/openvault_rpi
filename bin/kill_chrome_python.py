@@ -1,0 +1,2 @@
+pkill chromium
+pkill python

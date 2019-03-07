@@ -52,8 +52,27 @@ pip install rpi.gpio
 
 https://www.instructables.com/id/Raspberry-Pi-Touchscreen-Setup/
 
+In /etc/lightdm/lightdm.conf
+
+no sleep: xserver-command=X -s 0 dpms
+https://raspberry-projects.com/pi/pi-operating-systems/raspbian/gui/disable-screen-sleep
+
+no cursor: xserver-command = X -nocursor
+https://raspberrypi.stackexchange.com/questions/53127/how-to-permanently-hide-mouse-pointer-or-cursor-on-raspberry-pi
+
+
 ## Kiosk
 
-https://blog.eq8.eu/til/raspberi-pi-as-kiosk-load-browser-on-startup-fullscreen.html
+launch Chrome from command line: DISPLAY=:0 chromium-browser
 
 http://www.knight-of-pi.org/update-autostart-chromium-for-full-screen-applications/
+
+DISPLAY=:0 /usr/bin/chromium-browser --no-first-run --noerrdialogs --start-fullscreen --disable-notifications --disbale-infobars --kiosk https://jgrizou.co
+
+## Schedule at startup
+
+crontab -e
+
+@reboot /home/pi/workspace/openvault_rpi/bin/at_reboot.sh
+
+found at: https://askubuntu.com/questions/228304/how-do-i-run-a-script-at-start-up
