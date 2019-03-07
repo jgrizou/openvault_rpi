@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-PIN = 27
+PIN = 21
 
 GPIO.setup(PIN, GPIO.OUT)
 

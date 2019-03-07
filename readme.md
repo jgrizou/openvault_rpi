@@ -6,7 +6,7 @@ https://stackoverflow.com/questions/13322485/how-to-get-the-primary-ip-address-o
 
 ## schedule
 crontab -e
-*/5 * * * * ~/duckdns/duck.sh > ~/duckdns/cron.log 2>&1
+ > \*/5 * * * * ~/duckdns/duck.sh > ~/duckdns/cron.log 2>&1
 
 ## script
 
@@ -40,10 +40,20 @@ use interface to configure as per CRI website: https://cri-paris.freshservice.co
 https://www.raspberrypi.org/documentation/remote-access/ssh/
 
 
-# miniconda 
+# miniconda
 
 https://gist.github.com/simoncos/a7ce35babeaf73f512be24135c0fbafb
 
 ## gpio
 
 pip install rpi.gpio
+
+# Screen
+
+https://www.instructables.com/id/Raspberry-Pi-Touchscreen-Setup/
+
+## Kiosk
+
+https://blog.eq8.eu/til/raspberi-pi-as-kiosk-load-browser-on-startup-fullscreen.html
+
+http://www.knight-of-pi.org/update-autostart-chromium-for-full-screen-applications/
