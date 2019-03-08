@@ -1,5 +1,11 @@
+# Script to run at startup
 
-#dyndns
+See bin/at_reboot.sh
+
+Found at: https://askubuntu.com/questions/228304/how-do-i-run-a-script-at-start-up
+
+
+# Dynamic DNS
 
 See bin/duckdns.sh
 
@@ -20,15 +26,6 @@ Info:
 
 https://www.raspberrypi.org/documentation/remote-access/ssh/
 
-
-# miniconda
-
-https://gist.github.com/simoncos/a7ce35babeaf73f512be24135c0fbafb
-
-## rpi gpio
-
-pip install rpi.gpio
-
 # Screen
 
 Hardware: https://www.instructables.com/id/Raspberry-Pi-Touchscreen-Setup/
@@ -46,12 +43,41 @@ https://raspberrypi.stackexchange.com/questions/53127/how-to-permanently-hide-mo
 
 Launch chrome from command line: DISPLAY=:0 chromium-browser
 
+See bin/at_reboot.sh for all options
+
 http://www.knight-of-pi.org/update-autostart-chromium-for-full-screen-applications/
 
-DISPLAY=:0 /usr/bin/chromium-browser --no-first-run --noerrdialogs --start-fullscreen --disable-notifications --disbale-infobars --kiosk --app=https://jgrizou.co
+https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk
 
-# Script to run at startup
 
-See bin/at_reboot.sh
+# Packages
 
-Found at: https://askubuntu.com/questions/228304/how-do-i-run-a-script-at-start-up
+## Python
+
+Use berryconda: https://github.com/jjhelmus/berryconda
+
+Load from requirements in environment.yml
+
+To save the environment use script in bin/save_conda_environment.sh
+
+To create from the environment.yml file:
+> conda env create -f environment.yml
+
+
+### some lib used
+
+- conda install -c conda-forge nodejs
+- conda install numpy
+- pip install flask
+- pip install flask-socketio
+- pip install eventlet
+- pip install tinydb
+
+### rpi gpio
+
+pip install rpi.gpio
+
+
+## Web
+
+npm
