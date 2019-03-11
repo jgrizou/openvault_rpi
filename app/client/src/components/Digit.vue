@@ -1,15 +1,23 @@
 <template>
   <div>
-    <div v-for="(value, index) in flashing">
-      <div :class="{
-        'round': true,
-        ['n' + index]: true,
-        'flash': value
-        }"
-      >
-        {{ index }}
+
+    <div v-if="!show_message">
+      <div v-for="(value, index) in flashing">
+        <div :class="{
+          'round': true,
+          ['n' + index]: true,
+          'flash': value,
+          'noflash': !value
+          }"
+        >
+          {{ index }}
+        </div>
       </div>
     </div>
+    <div v-else class="message">
+      {{ message }}
+    </div>
+
   </div>
 </template>
 
@@ -19,12 +27,20 @@ export default {
   name: "Digit",
   data() {
     return {
+      show_message: true,
+      message: 'Calculating ...',
       flashing: [true, false, false, false, false, false, false, false, false, true]
     };
   },
   sockets: {
     flash: function (data) {
+      this.show_message = false
       this.flashing = data
+      this.$socket.emit('log', data)
+    },
+    message: function (data) {
+      this.show_message = true
+      this.message = data
       this.$socket.emit('log', data)
     }
   }
@@ -35,8 +51,20 @@ export default {
 <style>
 /* global styles */
 
+.message {
+  position: relative;
+  top: 60px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 50px;
+  font-weight: 600;
+  font-family: "Helvetica";
+  color: rgba(50, 50, 50, 1);
+}
+
+
 :root {
-  --digit_diameter: 90px;
+  --digit_diameter: 85px;
   --digit_spacing: calc(var(--screen_width) / 5);
   --digit_offset: calc( (var(--digit_spacing) - var(--digit_diameter)) / 2);
 }
@@ -48,15 +76,10 @@ export default {
   border-radius: calc(var(--digit_diameter) / 2); /* rounding */
   text-align: center;
   vertical-align: middle;
-  font-size: 80px;
-  font-weight: 700;
+  font-size: 65px;
+  font-weight: 600;
   font-family: "Helvetica";
   line-height: var(--digit_diameter);
-  background-color: var(--off_color);
-}
-
-.flash {
-  background-color: var(--on_color);
 }
 
 .n0 {
@@ -99,6 +122,8 @@ export default {
   top: calc(1*var(--digit_spacing) + var(--digit_offset));
   left: calc(4*var(--digit_spacing) + var(--digit_offset));
 }
+
+
 
 
 </style>

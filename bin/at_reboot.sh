@@ -18,7 +18,7 @@ echo "####################" >> $flask_log_file
 echo "" >> $flask_log_file
 
 echo "Activating openvault_rpi environment..." >> $flask_log_file
-source activate openvault_rpi &>> $flask_log_file
+source /home/pi/berryconda3/bin/activate openvault_rpi &>> $flask_log_file
 
 echo "Launching Flask server " >> $flask_log_file
 # python -u option needed to remove buffer stdout from python

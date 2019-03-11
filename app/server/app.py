@@ -4,6 +4,14 @@ import os
 import inspect
 HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
+import random
+
+def random_boolean():
+    return random.choice([True, False])
+
+def random_text():
+    return random.choice(['#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+
 import time
 import numpy as np
 import RPi.GPIO as GPIO
@@ -56,19 +64,37 @@ def on_log(data):
 @socketio.on('click')
 def on_click(feedback_info):
     print(feedback_info)
-    emit('flash', np.random.randint(0, 2, 10, dtype="bool").tolist())
+
+    if random_boolean():
+        emit('flash', np.random.randint(0, 2, 10, dtype="bool").tolist())
+    else:
+        emit('message', 'Test...')
+
+    code_dict = []
+    for _ in range(4):
+        code_dict.append({'found': random_boolean(), 'ongoing': random_boolean(), 'text': random_text()})
+    socketio.emit('code', code_dict)
 
 
 if __name__ == '__main__':
     print('Flask is running in python')
 
     # import eventlet
-    # import numpy as np
+    # import random
+    #
+    # def random_boolean():
+    #     return random.choice([True, False])
+    #
+    # def random_text():
+    #     return random.choice(['#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
     #
     # ## from https://github.com/miguelgrinberg/python-socketio/issues/16
     # def background_emit():
     #     while True:
-    #         socketio.emit('flash', np.random.randint(0, 2, 10, dtype="bool").tolist())
+    #         code_dict = []
+    #         for _ in range(4):
+    #             code_dict.append({'found': random_boolean(), 'ongoing': random_boolean(), 'text': random_text()})
+    #         socketio.emit('code', code_dict)
     #         eventlet.sleep(1)
     #
     # eventlet.monkey_patch(time=True)

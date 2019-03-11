@@ -29,35 +29,6 @@ export default {
 
 <style>
 /* global styles */
-
-.display {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  width: 480px;
-  height: 150px;
-  background-color: rgba(0, 255, 0, 1);
-}
-
-.digit {
-  position: fixed;
-  left: 0px;
-  top: 150px;
-  width: 480px;
-  height: 200px;
-  background-color: rgba(0, 0, 255, 1);
-}
-
-.pad {
-  position: fixed;
-  left: 0px;
-  top: 350px;
-  width: 480px;
-  height: 450px;
-  background-color: rgba(255, 0, 0, 1);
-}
-
-
 </style>
 
 <style scoped>
