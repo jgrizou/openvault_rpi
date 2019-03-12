@@ -1,8 +1,8 @@
 <template>
   <div>
-    <display class="display"></display>
-    <digit class='digit'></digit>
-    <pad class='pad'></pad>
+    <display ref="display" class="display"></display>
+    <digit ref="digit" class='digit'></digit>
+    <pad ref="pad" class='pad' :callback="pad_callback"></pad>
   </div>
 </template>
 
@@ -17,11 +17,28 @@ export default {
   components: { Display, Digit, Pad},
   sockets: {
     connect: function () {
-      this.$socket.emit('log', '## Socket connected')
+      this.$socket.emit('is_spawn')
     },
-    disconnect: function () {
-      this.$socket.emit('log', '## Socket disconnected')
+    spawn_state: function (state) {
+      if (!state) {
+        this.spawn_learner()
+      }
     }
+  },
+  methods: {
+    spawn_learner: function () {
+      // spawn the learner given link given in url
+      this.$socket.emit('spawn_learner', this.$route.params.pathMatch)
+    },
+    pad_callback: function (click_info) {
+      var feedback_info = {}
+      feedback_info.symbol = click_info.button
+      feedback_info.flash = this.$refs.digit.flash
+      this.$socket.emit('feedback_info', feedback_info)
+    },
+  },
+  mounted() {
+    this.spawn_learner()
   }
 }
 </script>

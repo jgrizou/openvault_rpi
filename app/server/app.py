@@ -4,39 +4,33 @@ import os
 import inspect
 HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-import random
+# we will keep a simple database of rooms used
+# 1 room == 1 user
+from tinydb import TinyDB, where
+from tinyrecord import transaction
 
-def random_boolean():
-    return random.choice([True, False])
+ROOM_DATABASE_FILE = os.path.join(HERE_PATH, 'rooms.json')
+database = TinyDB(ROOM_DATABASE_FILE)
+database.purge()
 
-def random_text():
-    return random.choice(['#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+# we initialize the web server
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room
 
-import time
-import numpy as np
-import RPi.GPIO as GPIO
-
-LOCK_PIN = 21
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(LOCK_PIN, GPIO.OUT)
-
-def open_lock(duration_second=1):
-	GPIO.output(LOCK_PIN, GPIO.HIGH)
-	time.sleep(duration_second)
-	GPIO.output(LOCK_PIN, GPIO.LOW)
-
-
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
-
-from tools import SERVE_FOLDER
+from tools import SERVE_FOLDER, CONFIG_FOLDER
 app = Flask(__name__, static_folder=SERVE_FOLDER, template_folder=SERVE_FOLDER, static_url_path='')
 
 app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
+# we initialise the learner and pass the instance of socketio
+from learner_tools import LearnerManager
+learner_manager = LearnerManager(socketio)
+socketio.on_namespace(learner_manager)
+
+# Lock tools
+from lock_tools import open_lock
 
 # when opening the root url, we server index.html that was compiled via npm in SERVE_FOLDER
 @app.route('/')
@@ -49,31 +43,36 @@ def serve_static(path):
     return app.send_from_directory('', path)
 
 
+# on connect, join room, update database
 @socketio.on('connect')
 def on_connect():
-    print('Clients connected')
+    room_id = request.sid
+    join_room(room_id)
+    with transaction(database) as tr:
+        tr.insert({'room_id': room_id})
+    print('{} clients connected'.format(len(database.all())))
 
+# on disconnect, leave room, update database
+# delete the learner for this room if created
 @socketio.on('disconnect')
 def on_disconnect():
-    print('Clients disconnected')
+    room_id = request.sid
+    leave_room(room_id)
+    with transaction(database) as tr:
+        tr.remove(where('room_id') == room_id)
+    learner_manager.kill(room_id)
+    print('{} clients connected'.format(len(database.all())))
 
-@socketio.on('log')
-def on_log(data):
-    print(data)
+@socketio.on('spawn_learner')
+def on_spawn_learner(config_filename):
+    room_id = request.sid
+    full_config_file = os.path.join(CONFIG_FOLDER, config_filename)
+    learner_manager.spawn(room_id, full_config_file)
 
-@socketio.on('click')
-def on_click(feedback_info):
-    print(feedback_info)
 
-    if random_boolean():
-        emit('flash', np.random.randint(0, 2, 10, dtype="bool").tolist())
-    else:
-        emit('message', 'Test...')
-
-    code_dict = []
-    for _ in range(4):
-        code_dict.append({'found': random_boolean(), 'ongoing': random_boolean(), 'text': random_text()})
-    socketio.emit('code', code_dict)
+@socketio.on('open_lock')
+def on_open_lock():
+    open_lock()
 
 
 if __name__ == '__main__':

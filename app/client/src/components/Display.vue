@@ -10,6 +10,10 @@
       >
         {{ item['text'] }}
       </div>
+    </div>
+
+    <button class="reset" v-on:click="reset">{{ n_iteration }} Reset</button>
+
   </div>
 </template>
 
@@ -19,6 +23,7 @@ export default {
   name: 'Display',
   data() {
     return {
+      n_iteration: 0,
       code: [
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''},
@@ -28,10 +33,18 @@ export default {
     };
   },
   sockets: {
-    code: function (data) {
-      this.code = data
+    code: function (code_json) {
+      this.code = code_json
       this.$socket.emit('log', data)
+    },
+    n_iteration: function (n_iteration) {
+      this.n_iteration = n_iteration
     }
+  },
+  methods: {
+    reset: function () {
+      this.$socket.emit('reset')
+    },
   }
 }
 
@@ -48,6 +61,18 @@ export default {
   --tile_spacing: calc( ( (var(--screen_width) - 2*var(--tile_offset)) - 4*var(--tile_width)) / 3 );
   --tile_color: rgba(200, 200, 200, 1);
   --tile_border: 5px;
+}
+
+.reset {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  width: 45px;
+  height: 35px;
+  outline: none; /* remove contour when clicked */
+  border: none;
+  border-radius: 5px; /* rounding */
+  background-color: rgba(230, 230, 230, 1);
 }
 
 .tile {

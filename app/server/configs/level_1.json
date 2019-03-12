@@ -1,0 +1,17 @@
+{
+  "name": "Level 1",
+  "code": {
+    "secret_code": [0, 0, 0, 0],
+    "show_code": true
+  },
+  "learner": {
+    "type": "discrete",
+    "n_hypothesis": 10,
+    "known_symbols": {
+      "left": false,
+      "right": true
+    },
+    "accumulate_known_symbols_between_numbers": false,
+    "show_learning_progress": true
+  }
+}

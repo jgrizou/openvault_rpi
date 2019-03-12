@@ -15,11 +15,17 @@
 
 export default {
   name: 'Pad',
+  props: {
+    callback: {
+      type: Function,
+      required: true
+    }
+  },
   methods: {
     on_click: function (button_name, event) {
       var click_info = {}
-      click_info.feedback_info = button_name
-      this.$socket.emit('click', click_info)
+      click_info.button = button_name
+      this.callback(click_info)
     }
   }
 }

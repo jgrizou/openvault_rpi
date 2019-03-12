@@ -2,7 +2,7 @@
   <div>
 
     <div v-if="!show_message">
-      <div v-for="(value, index) in flashing">
+      <div v-for="(value, index) in flash">
         <div :class="{
           'round': true,
           ['n' + index]: true,
@@ -27,21 +27,19 @@ export default {
   name: "Digit",
   data() {
     return {
-      show_message: true,
-      message: 'Calculating ...',
-      flashing: [true, false, false, false, false, false, false, false, false, true]
+      show_message: false,
+      message: '',
+      flash: undefined
     };
   },
   sockets: {
-    flash: function (data) {
+    flash: function (flash) {
       this.show_message = false
-      this.flashing = data
-      this.$socket.emit('log', data)
+      this.flash = flash
     },
-    message: function (data) {
+    message: function (message) {
       this.show_message = true
-      this.message = data
-      this.$socket.emit('log', data)
+      this.message = message
     }
   }
 }
@@ -122,9 +120,6 @@ export default {
   top: calc(1*var(--digit_spacing) + var(--digit_offset));
   left: calc(4*var(--digit_spacing) + var(--digit_offset));
 }
-
-
-
 
 </style>
 
