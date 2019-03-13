@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-else class="message">
-      {{ message }}
+      Calculating...
     </div>
 
   </div>
@@ -28,19 +28,8 @@ export default {
   data() {
     return {
       show_message: false,
-      message: '',
       flash: undefined
     };
-  },
-  sockets: {
-    flash: function (flash) {
-      this.show_message = false
-      this.flash = flash
-    },
-    message: function (message) {
-      this.show_message = true
-      this.message = message
-    }
   }
 }
 

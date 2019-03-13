@@ -14,7 +14,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(LOCK_PIN, GPIO.OUT)
 
-def open_lock(duration_second=1):
-	GPIO.output(LOCK_PIN, GPIO.HIGH)
-	time.sleep(duration_second)
-	GPIO.output(LOCK_PIN, GPIO.LOW)
+def open():
+    GPIO.output(LOCK_PIN, GPIO.HIGH)
+
+def close():
+    GPIO.output(LOCK_PIN, GPIO.LOW)

@@ -30,7 +30,7 @@ learner_manager = LearnerManager(socketio)
 socketio.on_namespace(learner_manager)
 
 # Lock tools
-from lock_tools import open_lock
+import lock_tools
 
 # when opening the root url, we server index.html that was compiled via npm in SERVE_FOLDER
 @app.route('/')
@@ -69,10 +69,13 @@ def on_spawn_learner(config_filename):
     full_config_file = os.path.join(CONFIG_FOLDER, config_filename)
     learner_manager.spawn(room_id, full_config_file)
 
-
 @socketio.on('open_lock')
 def on_open_lock():
-    open_lock()
+    lock_tools.open()
+
+@socketio.on('close_lock')
+def on_close_lock():
+    lock_tools.close()
 
 
 if __name__ == '__main__':

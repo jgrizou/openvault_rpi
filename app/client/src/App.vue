@@ -44,6 +44,15 @@ export default {
   color: var(--on_color_active);
 }
 
+
+.fullscreen {
+  position: absolute;
+  top: 0px;
+  width: var(--screen_width);
+  height: var(--screen_height);
+  background-color: rgba(255, 255, 255, 1);
+}
+
 .display {
   position: absolute;
   top: 0px;

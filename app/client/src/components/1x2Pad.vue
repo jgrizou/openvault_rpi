@@ -2,10 +2,12 @@
   <div>
     <button
       class='btn btn-left'
+      :disabled="disabled"
       v-on:click="on_click('left')">
     </button>
     <button
       class='btn btn-right'
+      :disabled="disabled"
       v-on:click="on_click('right')">
     </button>
   </div>
@@ -19,6 +21,17 @@ export default {
     callback: {
       type: Function,
       required: true
+    }
+  },
+  data() {
+    return {
+      paused: false,
+      awaiting_flash: false
+    }
+  },
+  computed: {
+    disabled: function () {
+      return this.paused || this.awaiting_flash
     }
   },
   methods: {

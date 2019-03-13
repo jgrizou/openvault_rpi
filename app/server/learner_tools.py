@@ -9,6 +9,8 @@ import sys
 openvault_path = os.path.join(HERE_PATH, '..', '..', '..')
 sys.path.append(openvault_path)
 
+import time
+
 from flask import request
 from flask_socketio import Namespace, emit
 
@@ -84,14 +86,14 @@ class Learner(object):
 
     def step(self, feedback_info):
         if self.code_manager.is_code_decoded():
-            print('DECODED')
+            raise Exception('Should never get there')
         else:
             self.update_iteration(self.n_iteration + 1)
 
             self.update_learner(feedback_info)
 
             if self.learner.is_inconsistent():
-                print('INCONSISTENT')
+                self.socketio.emit('inconsistent', room=self.room_id)
 
             if self.learner.is_solved():
                 self.update_code()
@@ -104,9 +106,13 @@ class Learner(object):
                 print(self.code_manager.decoded_code)
 
             if self.code_manager.is_code_decoded():
-                print('DECODED')
+                if self.code_manager.is_code_valid():
+                    self.socketio.emit('valid', room=self.room_id)
+                else:
+                    self.socketio.emit('invalid', room=self.room_id)
             else:
                 self.update_flash_pattern()
+
 
     def update_known_symbols(self):
         # update the known_symbols if needed
@@ -121,7 +127,7 @@ class Learner(object):
 
     def update_flash_pattern(self):
         self.socketio.emit(
-            'flash',
+            'update_flash',
             self.learner.get_next_flash_pattern(),
             room=self.room_id)
 
@@ -135,14 +141,13 @@ class Learner(object):
         self.learner.update(displayed_flash_patterns, feedback_symbol)
 
     def update_code(self):
-        # get new number decoded, add and display resulting code
-        # here solution_index is directly the new number
+        # if new digit found
         if self.learner.is_solved():
             solution_index = self.learner.get_solution_index()
             self.code_manager.add_new_digit(solution_index)
 
         self.socketio.emit(
-            'code',
+            'update_code',
             self.code_manager.code_json,
             room=self.room_id)
 

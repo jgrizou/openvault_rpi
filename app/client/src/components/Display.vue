@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <button class="reset" v-on:click="reset">{{ n_iteration }} Reset</button>
+    <button :class="{'reset' : true, 'reset_active': reset_active}" v-on:click="reset">{{ n_iteration }} Reset</button>
 
   </div>
 </template>
@@ -24,27 +24,25 @@ export default {
   data() {
     return {
       n_iteration: 0,
+      reset_active: false,
       code: [
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''}
       ]
-    };
+    }
   },
   sockets: {
-    code: function (code_json) {
-      this.code = code_json
-      this.$socket.emit('log', data)
-    },
     n_iteration: function (n_iteration) {
       this.n_iteration = n_iteration
+      this.reset_active = n_iteration > 0
     }
   },
   methods: {
     reset: function () {
       this.$socket.emit('reset')
-    },
+    }
   }
 }
 
@@ -73,6 +71,10 @@ export default {
   border: none;
   border-radius: 5px; /* rounding */
   background-color: rgba(230, 230, 230, 1);
+}
+
+.reset_active {
+  background-color: rgba(255, 100, 100, 1);
 }
 
 .tile {
