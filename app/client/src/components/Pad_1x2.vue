@@ -1,22 +1,26 @@
 <template>
   <div>
-    <button
-      class='btn btn-left'
-      :disabled="disabled"
-      v-on:click="on_click('left')">
-    </button>
-    <button
-      class='btn btn-right'
-      :disabled="disabled"
-      v-on:click="on_click('right')">
-    </button>
+    <div v-for="(color, index) in pad_color">
+
+      <button
+        :class="{
+          'btn btn-elongated': true,
+          ['btn-elongated-' + index]: true,
+          [color]: true
+          }"
+        :disabled="disabled"
+        v-on:click="on_click(index.toString())">
+      </button>
+
+    </div>
+
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'Pad',
+  name: 'Pad12',
   props: {
     callback: {
       type: Function,
@@ -26,7 +30,8 @@ export default {
   data() {
     return {
       paused: false,
-      awaiting_flash: false
+      awaiting_flash: false,
+      pad_color: ['noflash', 'flash']
     }
   },
   computed: {
@@ -48,38 +53,21 @@ export default {
 <style>
 /* global styles */
 
-.btn {
+.btn-elongated {
   position: absolute;
   top: 50px;
   width: 200px;
   height: 350px;
   outline: none; /* remove contour when clicked */
   border: none;
-  border-radius: 15px; /* rounding */
-  box-shadow: 0 20px rgba(130, 130, 130, 1);
 }
 
-.btn:active {
-  box-shadow: 0 5px rgba(100, 100, 100, 1);
-  transform: translateY(15px);
-}
-
-.btn-left {
+.btn-elongated-0 {
   left: 20px;
-  background-color: var(--off_color);
 }
 
-.btn-left:active {
-  background-color: var(--off_color_active);
-}
-
-.btn-right {
+.btn-elongated-1 {
   right: 20px;
-  background-color: var(--on_color);
-}
-
-.btn-right:active {
-  background-color: var(--on_color_active);
 }
 
 </style>

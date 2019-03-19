@@ -2,16 +2,35 @@
   <div>
 
     <div v-if="vault_control">
-      <lock ref="lock" :callback="hide_vault_control"></lock>
+      <Lock ref="lock" :callback="hide_vault_control"></Lock>
     </div>
     <div v-else>
-      <display ref="display" class="display"></display>
+
+      <Display ref="display" class="display"></Display>
+
       <div v-if="check_combination">
-        <check ref="check"></check>
+        <Check ref="check"></Check>
       </div>
       <div v-else>
-        <digit ref="digit" class='digit'></digit>
-        <pad ref="pad" class='pad' :callback="pad_callback"></pad>
+
+        <Digit ref="digit" class="digit"></Digit>
+
+        <div v-if="level == 1">
+          <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
+        </div>
+        <div v-else-if="level == 2">
+          <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
+        </div>
+        <div v-else-if="level == 3">
+          <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
+        </div>
+        <div v-else-if="level == 5">
+          <PadContinuous ref="pad" class="pad" :callback="continuous_pad_callback"></PadContinuous>
+        </div>
+        <div v-else>
+          <div class="pad">Level {{ level }} not implemented<div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -23,15 +42,24 @@ import Lock from './../components/Lock.vue'
 import Check from './../components/Check.vue'
 import Display from './../components/Display.vue'
 import Digit from './../components/Digit.vue'
-import Pad from './../components/1x2Pad.vue'
+import Pad12 from './../components/Pad_1x2.vue'
+import Pad33 from './../components/Pad_3x3.vue'
+import PadContinuous from './../components/Pad_Continuous.vue'
 
 export default {
-  name: 'Level1',
-  components: { Lock, Check, Display, Digit, Pad},
+  name: 'SPA',
+  components: { Lock, Check, Display, Digit, Pad12, Pad33, PadContinuous},
   data() {
     return {
       vault_control: false,
       check_combination: false
+    }
+  },
+  computed: {
+    level: function () {
+      var config_file = this.$route.params.pathMatch
+      var number_in_config_file = config_file.match(/\d/) // regex
+      return parseInt(number_in_config_file, 10) // convert str in int
     }
   },
   sockets: {
@@ -56,6 +84,9 @@ export default {
     update_flash: function (flash) {
       this.$refs.digit.flash = flash
       this.$refs.pad.awaiting_flash = false // enable the pad button
+    },
+    update_pad: function (pad_color) {
+      this.$refs.pad.pad_color = pad_color
     },
     valid: function () {
       this.$socket.emit('log', 'valid')
@@ -88,13 +119,17 @@ export default {
       // spawn the learner given link given in url
       this.$socket.emit('spawn_learner', this.$route.params.pathMatch)
     },
-    pad_callback: function (click_info) {
+    discrete_pad_callback: function (click_info) {
       this.$refs.pad.awaiting_flash = true // disable the pad button
 
       var feedback_info = {}
       feedback_info.symbol = click_info.button
       feedback_info.flash = this.$refs.digit.flash
       this.$socket.emit('feedback_info', feedback_info)
+    },
+    continuous_pad_callback: function (click_info) {
+      // this.$refs.pad.awaiting_flash = true // disable the pad button
+      this.$socket.emit('log', click_info)
     },
     show_vault_control: function () {
       this.vault_control = true

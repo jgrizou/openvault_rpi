@@ -9,7 +9,7 @@ import sys
 openvault_path = os.path.join(HERE_PATH, '..', '..', '..')
 sys.path.append(openvault_path)
 
-import time
+import random
 
 from flask import request
 from flask_socketio import Namespace, emit
@@ -29,6 +29,7 @@ class LearnerManager(Namespace):
     def spawn(self, room_id, config_filename):
         if room_id in self.learners:
             self.kill(room_id)
+        print('[{}] Loading {}'.format(room_id, config_filename))
         config = read_config(config_filename)
         self.learners[room_id] = Learner(self.socketio, room_id, config)
 
@@ -79,9 +80,9 @@ class Learner(object):
 
     def start(self):
         self.update_iteration(0)
-        self.update_flash_pattern()
         self.update_code()
-        # self.update_pad()
+        self.update_pad()
+        self.update_flash_pattern()
         print('Starting learner...')
 
     def step(self, feedback_info):
@@ -98,7 +99,6 @@ class Learner(object):
             if self.learner.is_solved():
                 self.update_code()
                 self.update_known_symbols()
-                # self.update_pad()
                 # restart the learner for next number
                 self.init_learner()
 
@@ -111,8 +111,8 @@ class Learner(object):
                 else:
                     self.socketio.emit('invalid', room=self.room_id)
             else:
+                self.update_pad()
                 self.update_flash_pattern()
-
 
     def update_known_symbols(self):
         # update the known_symbols if needed
@@ -120,6 +120,7 @@ class Learner(object):
         if learner_info['accumulate_known_symbols_between_numbers']:
             solution_index = self.learner.get_solution_index()
             learner_info['known_symbols'] = self.learner.compute_symbols_belief_for_hypothesis(solution_index)
+        print(self.config['learner'])
 
     def update_iteration(self, new_iteration_value):
         self.n_iteration = new_iteration_value
@@ -152,9 +153,32 @@ class Learner(object):
             room=self.room_id)
 
     def update_pad(self):
-        learner_info = self.config['learner']
-        if learner_info['show_learning_progress']:
-            print('NOT IMPLEMENTED')
+        pad_info = self.config['pad']
+        if pad_info['show_learning_progress']:
+            learner_info = self.config['learner']
+            known_symbols = learner_info['known_symbols']
+
+            FLASH_TO_COLOR = {}
+            FLASH_TO_COLOR[True] = 'flash'
+            FLASH_TO_COLOR[False] = 'noflash'
+
+            pad_color = ['neutral' for _ in range(pad_info['n_pad'])]
+            for k, v in known_symbols.items():
+                pad_color[int(k)] = FLASH_TO_COLOR[v]
+            print(pad_color)
+            self.socketio.emit('update_pad', pad_color, room=self.room_id)
+
+        if pad_info['randomize_pad_color']:
+            if pad_info['n_pad'] == 2:
+                option1 = ['flash', 'noflash']
+                option2 = ['noflash', 'flash']
+                pad_color = random.choice([option1, option2])
+            else:
+                random_color = lambda: random.choice(['flash', 'noflash'])
+                pad_color = [random_color() for _ in range(pad_info['n_pad'])]
+
+            print(pad_color)
+            self.socketio.emit('update_pad', pad_color, room=self.room_id)
 
 
 class CodeManager(object):

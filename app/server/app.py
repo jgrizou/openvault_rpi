@@ -90,13 +90,14 @@ if __name__ == '__main__':
     # def random_text():
     #     return random.choice(['#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
     #
+    # def random_pad_color():
+    #     return random.choice(['flash', 'noflash', 'neutral'])
+    #
     # ## from https://github.com/miguelgrinberg/python-socketio/issues/16
     # def background_emit():
     #     while True:
-    #         code_dict = []
-    #         for _ in range(4):
-    #             code_dict.append({'found': random_boolean(), 'ongoing': random_boolean(), 'text': random_text()})
-    #         socketio.emit('code', code_dict)
+    #         pad_color = [random_pad_color() for _ in range(9)]
+    #         socketio.emit('update_pad', pad_color)
     #         eventlet.sleep(1)
     #
     # eventlet.monkey_patch(time=True)

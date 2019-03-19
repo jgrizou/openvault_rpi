@@ -5,7 +5,7 @@ import router from './router'
 
 Vue.use(new VueSocketIO({
   debug: false,
-  connection: 'http://localhost:5000'
+  connection: 'http://openvault.duckdns.org:5000'
 }))
 
 // eslint-disable-next-line no-new
