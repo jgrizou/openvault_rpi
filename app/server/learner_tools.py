@@ -29,9 +29,7 @@ class LearnerManager(Namespace):
     def spawn(self, room_id, config_filename):
         if room_id in self.learners:
             self.kill(room_id)
-        print('[{}] Loading {}'.format(room_id, config_filename))
-        config = read_config(config_filename)
-        self.learners[room_id] = Learner(self.socketio, room_id, config)
+        self.learners[room_id] = Learner(self.socketio, room_id, config_filename)
 
     def kill(self, room_id):
         if room_id in self.learners:
@@ -58,13 +56,15 @@ class LearnerManager(Namespace):
 
 class Learner(object):
 
-    def __init__(self, socketio, room_id, config):
+    def __init__(self, socketio, room_id, config_filename):
         self.socketio = socketio
         self.room_id = room_id
-        self.config = config
+        self.config_filename = config_filename
         self.reset()
 
     def reset(self):
+        print('[{}] Loading {}'.format(self.room_id, self.config_filename))
+        self.config = read_config(self.config_filename)
         self.code_manager = CodeManager(self.config['code'])
         self.init_learner()
         self.start()
@@ -79,8 +79,8 @@ class Learner(object):
             raise Exception('Learner of type {} not handled'. format(learner_info['type']))
 
     def start(self):
-        self.update_iteration(0)
-        self.update_code()
+        self.update_iteration(new_iteration_value=0)
+        self.update_code(apply_pause=False)
         self.update_pad()
         self.update_flash_pattern()
         print('Starting learner...')
@@ -141,15 +141,19 @@ class Learner(object):
 
         self.learner.update(displayed_flash_patterns, feedback_symbol)
 
-    def update_code(self):
+    def update_code(self, apply_pause=True):
         # if new digit found
         if self.learner.is_solved():
             solution_index = self.learner.get_solution_index()
             self.code_manager.add_new_digit(solution_index)
 
+        code_info = {}
+        code_info['code_json'] = self.code_manager.code_json
+        code_info['apply_pause'] = apply_pause
+
         self.socketio.emit(
             'update_code',
-            self.code_manager.code_json,
+            code_info,
             room=self.room_id)
 
     def update_pad(self):
@@ -165,18 +169,6 @@ class Learner(object):
             pad_color = ['neutral' for _ in range(pad_info['n_pad'])]
             for k, v in known_symbols.items():
                 pad_color[int(k)] = FLASH_TO_COLOR[v]
-            print(pad_color)
-            self.socketio.emit('update_pad', pad_color, room=self.room_id)
-
-        if pad_info['randomize_pad_color']:
-            if pad_info['n_pad'] == 2:
-                option1 = ['flash', 'noflash']
-                option2 = ['noflash', 'flash']
-                pad_color = random.choice([option1, option2])
-            else:
-                random_color = lambda: random.choice(['flash', 'noflash'])
-                pad_color = [random_color() for _ in range(pad_info['n_pad'])]
-
             print(pad_color)
             self.socketio.emit('update_pad', pad_color, room=self.room_id)
 

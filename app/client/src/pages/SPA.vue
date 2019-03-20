@@ -19,7 +19,7 @@
           <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
         </div>
         <div v-else-if="level == 2">
-          <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
+          <Pad12Random ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12Random>
         </div>
         <div v-else-if="level == 3">
           <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
@@ -43,12 +43,13 @@ import Check from './../components/Check.vue'
 import Display from './../components/Display.vue'
 import Digit from './../components/Digit.vue'
 import Pad12 from './../components/Pad_1x2.vue'
+import Pad12Random from './../components/Pad_1x2_RandomPadColor.vue'
 import Pad33 from './../components/Pad_3x3.vue'
 import PadContinuous from './../components/Pad_Continuous.vue'
 
 export default {
   name: 'SPA',
-  components: { Lock, Check, Display, Digit, Pad12, Pad33, PadContinuous},
+  components: { Lock, Check, Display, Digit, Pad12, Pad12Random, Pad33, PadContinuous},
   data() {
     return {
       vault_control: false,
@@ -71,15 +72,19 @@ export default {
         this.spawn_learner()
       }
     },
-    update_code: function (code_json) {
-      this.$refs.digit.show_message = true
-      this.$refs.pad.paused = true // disable the pad button
+    update_code: function (code_info) {
+      if (code_info.apply_pause) {
+        this.$refs.digit.show_message = true
+        this.$refs.pad.paused = true // disable the pad button
 
-      setTimeout( () => {
-        this.$refs.display.code = code_json
-        this.$refs.digit.show_message = false
-        this.$refs.pad.paused = false // enable the pad button
-      }, 800);
+        setTimeout( () => {
+          this.$refs.display.code = code_info.code_json
+          this.$refs.digit.show_message = false
+          this.$refs.pad.paused = false // enable the pad button
+        }, 800);
+      } else {
+        this.$refs.display.code = code_info.code_json
+      }
     },
     update_flash: function (flash) {
       this.$refs.digit.flash = flash

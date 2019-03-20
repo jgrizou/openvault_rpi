@@ -15,7 +15,6 @@
   },
   "pad": {
     "n_pad": 2,
-    "show_learning_progress": false,
-    "randomize_pad_color": false
+    "show_learning_progress": false
   }
 }
