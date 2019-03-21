@@ -1,5 +1,5 @@
 {
-  "name": "Level 1",
+  "name": "Level 1 - Visible",
   "code": {
     "secret_code": [0, 0, 0, 0],
     "show_code": true

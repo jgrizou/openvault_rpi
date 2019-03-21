@@ -63,7 +63,7 @@ class Learner(object):
         self.reset()
 
     def reset(self):
-        print('[{}] Loading {}'.format(self.room_id, self.config_filename))
+        print('[{}] Starting learner from {}'.format(self.room_id, self.config_filename))
         self.config = read_config(self.config_filename)
         self.code_manager = CodeManager(self.config['code'])
         self.init_learner()
@@ -83,7 +83,6 @@ class Learner(object):
         self.update_code(apply_pause=False)
         self.update_pad()
         self.update_flash_pattern()
-        print('Starting learner...')
 
     def step(self, feedback_info):
         if self.code_manager.is_code_decoded():

@@ -6,10 +6,10 @@
 
 chrome_log_file="/home/pi/workspace/openvault_rpi/logs/chrome.log"
 flask_log_file="/home/pi/workspace/openvault_rpi/logs/flask.log"
-# url="http://127.0.0.1:5000/#/level_1.json" # when served via flask
-# url="http://127.0.0.1:1234/#/level_1_visible.json" # when served via npm run dev
-# url="http://127.0.0.1:1234/#/level_2_visible.json" # when served via npm run dev
-url="http://127.0.0.1:1234/#/level_3_visible.json" # when served via npm run dev
+# url="http://127.0.0.1:5000/#/ui/level_1.json" # when served via flask
+# url="http://127.0.0.1:1234/#/ui/level_1_visible.json" # when served via npm run dev
+# url="http://127.0.0.1:1234/#/ui/level_2_visible.json" # when served via npm run dev
+url="http://127.0.0.1:1234/"
 
 
 ## FLASK

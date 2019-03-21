@@ -24,6 +24,9 @@
         <div v-else-if="level == 3">
           <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
         </div>
+        <div v-else-if="level == 4">
+          <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
+        </div>
         <div v-else-if="level == 5">
           <PadContinuous ref="pad" class="pad" :callback="continuous_pad_callback"></PadContinuous>
         </div>

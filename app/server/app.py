@@ -17,7 +17,7 @@ database.purge()
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room
 
-from tools import SERVE_FOLDER, CONFIG_FOLDER
+from tools import SERVE_FOLDER, CONFIG_FOLDER, get_configs
 app = Flask(__name__, static_folder=SERVE_FOLDER, template_folder=SERVE_FOLDER, static_url_path='')
 
 app.config['SECRET_KEY'] = 'secret!'
@@ -62,6 +62,12 @@ def on_disconnect():
         tr.remove(where('room_id') == room_id)
     learner_manager.kill(room_id)
     print('{} clients connected'.format(len(database.all())))
+
+
+@socketio.on('get_configs')
+def on_get_configs():
+    emit('set_configs', get_configs())
+
 
 @socketio.on('spawn_learner')
 def on_spawn_learner(config_filename):

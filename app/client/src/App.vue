@@ -38,7 +38,6 @@ export default {
 
 .noflash {
   background-color: var(--off_color);
-  color: var(--off_color_active);
 }
 
 .noflash:active {
@@ -47,7 +46,6 @@ export default {
 
 .flash {
   background-color: var(--on_color);
-  color: var(--on_color_active);
 }
 
 .flash:active {

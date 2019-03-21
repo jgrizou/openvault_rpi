@@ -6,8 +6,8 @@
         <div :class="{
           'round': true,
           ['n' + index]: true,
-          'flash': value,
-          'noflash': !value
+          'digit-flash': value,
+          'digit-noflash': !value
           }"
         >
           {{ index }}
@@ -48,6 +48,17 @@ export default {
   font-family: "Helvetica";
   color: rgba(50, 50, 50, 1);
 }
+
+.digit-noflash {
+  background-color: var(--off_color);
+  color: var(--off_color_active);
+}
+
+.digit-flash {
+  background-color: var(--on_color);
+  color: var(--on_color_active);
+}
+
 
 
 :root {
