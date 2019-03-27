@@ -1,13 +1,15 @@
 <template>
   <div>
 
+
+    <Digit ref="digit" class="digit"></Digit>
+
+
     <Display ref="display" class="display"></Display>
 
     <!-- reset panel appears only when needed -->
     <Reset ref="reset" :callback="reset"></Reset>
 
-
-    <Digit ref="digit" class="digit"></Digit>
 
     <!-- level components -->
     <div v-if="level == 1">
@@ -68,14 +70,19 @@ export default {
     },
     update_code: function (code_info) {
       if (code_info.apply_pause) {
-        this.$refs.digit.show_message = true
+        this.$refs.digit.show_digit = false
         this.$refs.pad.paused = true // disable the pad button
+
 
         setTimeout( () => {
           this.$refs.display.code = code_info.code_json
-          this.$refs.digit.show_message = false
+        }, 50);
+
+        setTimeout( () => {
+          this.$refs.digit.show_digit = true
           this.$refs.pad.paused = false // enable the pad button
-        }, 300);
+        }, 900);
+
       } else {
         this.$refs.display.code = code_info.code_json
       }

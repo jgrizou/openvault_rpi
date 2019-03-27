@@ -1,22 +1,19 @@
 <template>
   <div>
 
-    <div v-if="!show_message">
-      <div v-for="(value, index) in flash">
-        <div :class="{
-          'round': true,
-          ['n' + index]: true,
-          'digit-flash': value,
-          'digit-noflash': !value
-          }"
-        >
-          {{ index }}
+      <div v-show="show_digit">
+        <div v-for="(value, index) in flash">
+          <div :class="{
+            'round': true,
+            ['n' + index]: true,
+            'digit-flash': value,
+            'digit-noflash': !value
+            }"
+          >
+            {{ index }}
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else class="message">
-      Calculating...
-    </div>
 
   </div>
 </template>
@@ -27,7 +24,7 @@ export default {
   name: "Digit",
   data() {
     return {
-      show_message: false,
+      show_digit: true,
       flash: undefined
     };
   }
@@ -37,17 +34,6 @@ export default {
 
 <style>
 /* global styles */
-
-.message {
-  position: relative;
-  top: 60px;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 50px;
-  font-weight: 600;
-  color: rgba(50, 50, 50, 1);
-}
-
 
 .digit-noflash {
   background-color: var(--off_color_letter_background);
