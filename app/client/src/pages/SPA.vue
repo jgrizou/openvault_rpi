@@ -1,50 +1,47 @@
 <template>
   <div>
 
-    <div v-if="vault_control">
-      <Lock ref="lock" :callback="hide_vault_control"></Lock>
+    <Display ref="display" class="display"></Display>
+
+    <!-- reset panel appears only when needed -->
+    <Reset ref="reset" :callback="reset"></Reset>
+
+
+    <Digit ref="digit" class="digit"></Digit>
+
+    <!-- level components -->
+    <div v-if="level == 1">
+      <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
+    </div>
+    <div v-else-if="level == 2">
+      <Pad12Random ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12Random>
+    </div>
+    <div v-else-if="level == 3">
+      <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
+    </div>
+    <div v-else-if="level == 4">
+      <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
+    </div>
+    <div v-else-if="level == 5">
+      <PadContinuous ref="pad" class="pad" :callback="continuous_pad_callback"></PadContinuous>
     </div>
     <div v-else>
-
-      <Display ref="display" class="display"></Display>
-
-      <div v-if="check_combination">
-        <Check ref="check"></Check>
-      </div>
-      <div v-else>
-
-        <Digit ref="digit" class="digit"></Digit>
-
-        <div v-if="level == 1">
-          <Pad12 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12>
-        </div>
-        <div v-else-if="level == 2">
-          <Pad12Random ref="pad" class="pad" :callback="discrete_pad_callback"></Pad12Random>
-        </div>
-        <div v-else-if="level == 3">
-          <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
-        </div>
-        <div v-else-if="level == 4">
-          <Pad33 ref="pad" class="pad" :callback="discrete_pad_callback"></Pad33>
-        </div>
-        <div v-else-if="level == 5">
-          <PadContinuous ref="pad" class="pad" :callback="continuous_pad_callback"></PadContinuous>
-        </div>
-        <div v-else>
-          <div class="pad">Level {{ level }} not implemented<div>
-        </div>
-
-      </div>
+      <div class="pad">Level {{ level }} not implemented</div>
     </div>
+
+    <!-- check panel appears only when needed -->
+    <Check ref="check" :callback="hide_check_panel"></Check>
+
+
   </div>
 </template>
 
 
 <script>
-import Lock from './../components/Lock.vue'
 import Check from './../components/Check.vue'
 import Display from './../components/Display.vue'
 import Digit from './../components/Digit.vue'
+import Reset from './../components/Reset.vue'
 import Pad12 from './../components/Pad_1x2.vue'
 import Pad12Random from './../components/Pad_1x2_RandomPadColor.vue'
 import Pad33 from './../components/Pad_3x3.vue'
@@ -52,18 +49,12 @@ import PadContinuous from './../components/Pad_Continuous.vue'
 
 export default {
   name: 'SPA',
-  components: { Lock, Check, Display, Digit, Pad12, Pad12Random, Pad33, PadContinuous},
-  data() {
-    return {
-      vault_control: false,
-      check_combination: false
-    }
-  },
+  components: { Check, Display, Digit, Reset, Pad12, Pad12Random, Pad33, PadContinuous},
   computed: {
     level: function () {
       var config_file = this.$route.params.pathMatch
       var number_in_config_file = config_file.match(/\d/) // regex
-      return parseInt(number_in_config_file, 10) // convert str in int
+      return parseInt(number_in_config_file, 10) // convert str to int
     }
   },
   sockets: {
@@ -84,7 +75,7 @@ export default {
           this.$refs.display.code = code_info.code_json
           this.$refs.digit.show_message = false
           this.$refs.pad.paused = false // enable the pad button
-        }, 800);
+        }, 300);
       } else {
         this.$refs.display.code = code_info.code_json
       }
@@ -96,36 +87,18 @@ export default {
     update_pad: function (pad_color) {
       this.$refs.pad.pad_color = pad_color
     },
-    valid: function () {
-      this.$socket.emit('log', 'valid')
-      this.show_check_combination()
-
-      setTimeout( () => {
-        this.hide_check_combination()
-        this.show_vault_control()
-      }, 1000);
-    },
-    invalid: function () {
-      this.$socket.emit('log', 'invalid')
-      this.show_check_combination()
-
-      setTimeout( () => {
-        this.hide_check_combination()
-      }, 1000);
-    },
-    inconsistent: function () {
-      this.$socket.emit('log', 'inconsistent')
-      this.show_check_combination()
-
-      setTimeout( () => {
-        this.hide_check_combination()
-      }, 1000);
-    },
+    check: function (check_state) {
+      this.$socket.emit('log', check_state)
+      this.show_check_panel(check_state)
+    }
   },
   methods: {
     spawn_learner: function () {
       // spawn the learner given link given in url
       this.$socket.emit('spawn_learner', this.$route.params.pathMatch)
+    },
+    reset: function () {
+      this.$socket.emit('reset')
     },
     discrete_pad_callback: function (click_info) {
       this.$refs.pad.awaiting_flash = true // disable the pad button
@@ -139,19 +112,13 @@ export default {
       // this.$refs.pad.awaiting_flash = true // disable the pad button
       this.$socket.emit('log', click_info)
     },
-    show_vault_control: function () {
-      this.vault_control = true
+    show_check_panel: function (check_state) {
+      this.$refs.reset.force_hide = true
+      this.$refs.check.start(check_state)
     },
-    hide_vault_control: function () {
-      this.vault_control = false
-      this.$socket.emit('reset')
-    },
-    show_check_combination: function () {
-      this.check_combination = true
-    },
-    hide_check_combination: function () {
-      this.check_combination = false
-      this.$socket.emit('reset')
+    hide_check_panel: function () {
+      this.$refs.reset.force_hide = false
+      this.reset()
     }
   },
   mounted() {
@@ -163,6 +130,7 @@ export default {
 
 <style>
 /* global styles */
+
 </style>
 
 <style scoped>

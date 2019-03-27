@@ -93,7 +93,7 @@ class Learner(object):
             self.update_learner(feedback_info)
 
             if self.learner.is_inconsistent():
-                self.socketio.emit('inconsistent', room=self.room_id)
+                self.socketio.emit('check', 'inconsistent', room=self.room_id)
 
             if self.learner.is_solved():
                 self.update_code()
@@ -106,9 +106,9 @@ class Learner(object):
 
             if self.code_manager.is_code_decoded():
                 if self.code_manager.is_code_valid():
-                    self.socketio.emit('valid', room=self.room_id)
+                    self.socketio.emit('check', 'valid', room=self.room_id)
                 else:
-                    self.socketio.emit('invalid', room=self.room_id)
+                    self.socketio.emit('check', 'invalid', room=self.room_id)
             else:
                 self.update_pad()
                 self.update_flash_pattern()

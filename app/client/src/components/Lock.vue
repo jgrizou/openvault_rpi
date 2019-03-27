@@ -1,8 +1,6 @@
 <template>
   <div>
-
-    <!-- <canvas id="confetti"></canvas> -->
-
+    
     <div v-if="locked" class="lock closed" v-on:click="on_click">
       <img src="./../assets/lock-solid.svg">
     </div>
@@ -20,22 +18,8 @@
 </template>
 
 <script>
-// import "confetti-js"
-
 export default {
   name: "Lock",
-  // mounted () {
-  //   var confettiSettings = {
-  //     target: 'confetti',
-  //     clock: 50,
-  //     size: 2,
-  //     width: 480,
-  //     height: 800,
-  //     max: 200,
-  //   }
-  //   var confetti = new ConfettiGenerator(confettiSettings)
-  //   confetti.render()
-  // },
   props: {
     callback: {
       type: Function,

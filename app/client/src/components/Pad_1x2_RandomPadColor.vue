@@ -62,24 +62,6 @@ export default {
 
 <style>
 /* global styles */
-
-.btn-elongated {
-  position: absolute;
-  top: 50px;
-  width: 200px;
-  height: 350px;
-  outline: none; /* remove contour when clicked */
-  border: none;
-}
-
-.btn-elongated-0 {
-  left: 20px;
-}
-
-.btn-elongated-1 {
-  right: 20px;
-}
-
 </style>
 
 <style scoped>

@@ -57,15 +57,15 @@ export default {
 :root {
   --top_margin: 30px;
   --side_margin: 40px;
-  --btn_spacing: 30px;
   --btn_grid_witdh: calc( (var(--screen_width) - 2*var(--side_margin) - 2*var(--btn_spacing)) / 3 + var(--btn_spacing));
   --btn_width: calc( var(--btn_grid_witdh) - var(--btn_spacing));
+  --btn_height: calc( var(--btn_width) - var(--shadow_full))
 }
 
 .btn-square {
   position: absolute;
   width: var(--btn_width);
-  height: var(--btn_width);
+  height: var(--btn_height);
   outline: none; /* remove contour when clicked */
   border: none;
 }

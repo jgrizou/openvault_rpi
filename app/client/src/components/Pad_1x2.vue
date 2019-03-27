@@ -56,18 +56,18 @@ export default {
 .btn-elongated {
   position: absolute;
   top: 50px;
-  width: 200px;
+  width: 195px;
   height: 350px;
-  outline: none; /* remove contour when clicked */
+  outline: none;
   border: none;
 }
 
 .btn-elongated-0 {
-  left: 20px;
+  left: 40px;
 }
 
 .btn-elongated-1 {
-  right: 20px;
+  right: 40px;
 }
 
 </style>

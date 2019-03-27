@@ -12,8 +12,6 @@
       </div>
     </div>
 
-    <button :class="{'reset' : true, 'reset_active': reset_active}" v-on:click="reset">{{ n_iteration }} Reset</button>
-
   </div>
 </template>
 
@@ -23,25 +21,12 @@ export default {
   name: 'Display',
   data() {
     return {
-      n_iteration: 0,
-      reset_active: false,
       code: [
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''},
         {'found': false, 'ongoing': false, 'text': ''}
       ]
-    }
-  },
-  sockets: {
-    n_iteration: function (n_iteration) {
-      this.n_iteration = n_iteration
-      this.reset_active = n_iteration > 0
-    }
-  },
-  methods: {
-    reset: function () {
-      this.$socket.emit('reset')
     }
   }
 }
@@ -54,39 +39,22 @@ export default {
 :root {
   --tile_width: 80px;
   --tile_height: 100px;
-  --top_offset: 10px;
+  --top_offset: 50px;
   --tile_offset: 70px;
   --tile_spacing: calc( ( (var(--screen_width) - 2*var(--tile_offset)) - 4*var(--tile_width)) / 3 );
   --tile_color: rgba(200, 200, 200, 1);
-  --tile_border: 5px;
-}
-
-.reset {
-  position: absolute;
-  top: 40px;
-  right: 5px;
-  width: 45px;
-  height: 35px;
-  outline: none; /* remove contour when clicked */
-  border: none;
-  border-radius: 5px; /* rounding */
-  background-color: rgba(230, 230, 230, 1);
-}
-
-.reset_active {
-  background-color: rgba(255, 100, 100, 1);
+  --tile_border: 10px;
 }
 
 .tile {
   position: absolute;
   width: var(--tile_width);
   height: var(--tile_height);
-  border-radius: 5px; /* rounding */
+  border-radius: 0px; /* rounding */
   text-align: center;
   vertical-align: middle;
-  font-size: 90px;
+  font-size: 70px;
   font-weight: 700;
-  font-family: "Helvetica";
   line-height: var(--tile_height);
   background-color: var(--tile_color);
 }
