@@ -27,7 +27,7 @@
           </div>
           <div class="inconsistent_text" v-else-if="smiley_state == 'inconsistent'">
             <h1>OOPS</h1>
-            <p>You got mixed up :/</p>
+            <p>You got mixed up.</p>
           </div>
         </div>
 
@@ -64,41 +64,72 @@ export default {
   data() {
     return {
       smiley_state: '',
-      active: false
-    }
-  },
-  computed: {
-    show_button: function () {
-      return this.smiley_state != '' && this.smiley_state != 'loader'
+      active: false,
+      show_button: false,
+      loader_audio: new Audio("/audio/drum.wav"),
+      valid_audio: new Audio("/audio/unlock.mp3"),
+      invalid_audio: new Audio("/audio/fart.mp3"),
+      inconsistent_audio: new Audio("/audio/sneeze.mp3")
     }
   },
   methods: {
     on_click: function () {
       this.smiley_state = ''
-      this.text_state = ''
       this.active = false
+      this.show_button = false
       this.callback()
     },
     start: function (check_state) {
       this.active = true
 
+      var slide_timeout_ms = 500
+      var loader_timeout_ms = 1300 + slide_timeout_ms
+      var stop_load_audio_timeout_ms = 300 + loader_timeout_ms
+      var reveal_timeout_ms = 1000 + stop_load_audio_timeout_ms
+      var button_timeout_ms = 2000 + reveal_timeout_ms
+
       if (check_state == 'inconsistent') {
-
-        this.smiley_state = check_state
-
-      } else {
-
-        setTimeout( () => {
-          this.smiley_state = 'loader'
-        }, 500);
-
-        setTimeout( () => {
-          this.smiley_state = ''
-        }, 3000);
 
         setTimeout( () => {
           this.smiley_state = check_state
-        }, 3500);
+          this.inconsistent_audio.play()
+        }, slide_timeout_ms);
+
+        setTimeout( () => {
+          this.show_button = true
+        }, slide_timeout_ms + 2000);
+
+      } else {
+
+        this.loader_audio.currentTime = 0
+        this.loader_audio.play()
+
+        setTimeout( () => {
+          this.smiley_state = 'loader'
+        }, slide_timeout_ms);
+
+        setTimeout( () => {
+          this.smiley_state = ''
+        }, loader_timeout_ms);
+
+        setTimeout( () => {
+          this.loader_audio.pause()
+        }, stop_load_audio_timeout_ms);
+
+        setTimeout( () => {
+          this.smiley_state = check_state
+
+          if (check_state == 'valid') {
+            this.valid_audio.play()
+          } else if (check_state == 'invalid') {
+            this.invalid_audio.play()
+          }
+
+        }, reveal_timeout_ms);
+
+        setTimeout( () => {
+          this.show_button = true
+        }, button_timeout_ms);
 
       }
 
@@ -148,8 +179,8 @@ export default {
 }
 
 .smiley_loader {
-  background-color: rgba(255, 255, 255, 1);
-  -webkit-mask-box-image: url("./../assets/loader.gif");
+  background-color: var(--loader_color);
+  -webkit-mask-box-image: url("./../assets/smileys/loader.gif");
 }
 
 .smiley_valid {

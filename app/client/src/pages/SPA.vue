@@ -2,8 +2,9 @@
   <div>
 
 
-    <Digit ref="digit" class="digit"></Digit>
+    <!-- <button class="digit" v-on:click="show_check_panel('valid')"> HERE </button> -->
 
+    <Digit ref="digit" class="digit"></Digit>
 
     <Display ref="display" class="display"></Display>
 
@@ -95,7 +96,6 @@ export default {
       this.$refs.pad.pad_color = pad_color
     },
     check: function (check_state) {
-      this.$socket.emit('log', check_state)
       this.show_check_panel(check_state)
     }
   },
