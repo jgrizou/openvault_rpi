@@ -76,6 +76,7 @@ export default {
 
 
         setTimeout( () => {
+          console.log(code_info)
           this.$refs.display.code = code_info.code_json
         }, 50);
 

@@ -42,7 +42,7 @@ export default {
   --top_offset: 50px;
   --tile_offset: 70px;
   --tile_spacing: calc( ( (var(--screen_width) - 2*var(--tile_offset)) - 4*var(--tile_width)) / 3 );
-  --tile_color: rgba(200, 200, 200, 1);
+  --tile_color: rgba(255, 204, 204, 1);
   --tile_border: 10px;
 }
 
@@ -65,12 +65,12 @@ export default {
   line-height: calc( var(--tile_height) - var(--tile_border) );
   border-width: var(--tile_border);
   border-style: solid;
-  border-color: rgba(100, 100, 100, 1);
-  background-color: rgba(230, 230, 230, 1);
+  border-color: rgba(50, 50, 50, 1);
+  background-color: rgba(255, 224, 224, 1);
 }
 
 .found {
-  background-color: rgba(230, 230, 230, 1);
+  background-color: rgba(255, 224, 224, 1);
 }
 
 .c0 {

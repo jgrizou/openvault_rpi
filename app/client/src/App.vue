@@ -19,17 +19,15 @@ export default {
   --digit_height: 150px;
   --pad_height: calc( var(--screen_height) - var(--display_height) - var(--digit_height));
 
-  --on_color: rgba(0, 200, 255, 1);
-  --on_color_active: rgba(0, 150, 205, 1);
-  --on_shadow_color: rgba(0, 150, 205, 1);
-  --on_shadow_color_active: rgba(0, 100, 155, 1);
-  --on_color_letter_background: rgba(0, 200, 255, 0.5);
+  --on_color: rgba(160, 160, 160, 0.85);
+  --on_color_active: rgba(110, 110, 110, 0.85);
+  --on_shadow_color: rgba(110, 110, 110, 0.85);
+  --on_shadow_color_active: rgba(60, 60, 60, 0.85);
 
-  --off_color: rgba(255, 200, 0, 1);
-  --off_color_active: rgba(205, 150, 0, 1);
-  --off_shadow_color: rgba(205, 150, 0, 1);
-  --off_shadow_color_active: rgba(155, 100, 0, 1);
-  --off_color_letter_background: rgba(255, 200, 0, 0.5);
+  --off_color: rgba(255, 200, 0, 0.85);
+  --off_color_active: rgba(200, 150, 0, 0.85);
+  --off_shadow_color: rgba(200, 150, 0, 0.85);
+  --off_shadow_color_active: rgba(150, 100, 0, 0.85);
 
   --neutral_color: rgba(66, 65, 78, 1);
   --neutral_color_active: rgba(47, 46, 57, 1);

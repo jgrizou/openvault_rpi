@@ -35,22 +35,26 @@ export default {
 <style>
 /* global styles */
 
-.digit-noflash {
-  background-color: var(--off_color_letter_background);
-  color: var(--off_color_active);
-}
-
-.digit-flash {
-  background-color: var(--on_color_letter_background);
-  color: var(--on_color_active);
-}
-
 :root {
   --digit_diameter: 72px;
   --digit_margin: 50px;
   --digit_spacing: calc((var(--screen_width) - 2*var(--digit_margin)) / 5);
   --digit_offset: calc( (var(--digit_spacing) - var(--digit_diameter)) / 2);
+  --digit_number_color: rgba(50, 50, 50, 1);
 }
+
+
+
+.digit-noflash {
+  background-color: var(--off_color);
+  color: var(--digit_number_color);
+}
+
+.digit-flash {
+  background-color: var(--on_color);
+  color: var(--digit_number_color);
+}
+
 
 .round {
   position: absolute;

@@ -213,6 +213,7 @@ class CodeManager(object):
                     digit_json['ongoing'] = True
                     ongoing_not_set = False
             else:
+                digit_json['found'] = True
                 if self.config['show_code']:
                     digit_json['text'] = str(digit)
                 else:
