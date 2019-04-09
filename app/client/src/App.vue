@@ -48,7 +48,8 @@ export default {
   width: var(--screen_width);
   height: var(--screen_height);
   font-family: "Avenir";
-  /* transform: rotate(270deg) translateX(160px) translateY(160px); */
+  /* transform: scale(1) rotate(270deg) translateX(160px) translateY(160px); */
+  /* transform-origin: 0 0; */
 }
 
 .noflash {

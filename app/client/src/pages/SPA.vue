@@ -28,6 +28,9 @@
     <div v-else-if="level == 5">
       <PadContinuous ref="pad" class="pad" :callback="continuous_pad_callback"></PadContinuous>
     </div>
+    <div v-else-if="level == 6">
+      <PadAudio ref="pad" class="pad" :callback="audio_pad_callback"></PadAudio>
+    </div>
     <div v-else>
       <div class="pad">Level {{ level }} not implemented</div>
     </div>
@@ -49,14 +52,16 @@ import Pad12 from './../components/Pad_1x2.vue'
 import Pad12Random from './../components/Pad_1x2_RandomPadColor.vue'
 import Pad33 from './../components/Pad_3x3.vue'
 import PadContinuous from './../components/Pad_Continuous.vue'
+import PadAudio from './../components/Pad_Audio.vue'
 
 export default {
   name: 'SPA',
-  components: { Check, Display, Digit, Reset, Pad12, Pad12Random, Pad33, PadContinuous},
+  components: { Check, Display, Digit, Reset, Pad12, Pad12Random, Pad33, PadContinuous, PadAudio},
   computed: {
     level: function () {
       var config_file = this.$route.params.pathMatch
       var number_in_config_file = config_file.match(/\d/) // regex
+      return 6
       return parseInt(number_in_config_file, 10) // convert str to int
     }
   },
@@ -119,6 +124,9 @@ export default {
     continuous_pad_callback: function (click_info) {
       // this.$refs.pad.awaiting_flash = true // disable the pad button
       this.$socket.emit('log', click_info)
+    },
+    audio_pad_callback: function (audio_info) {
+      this.$socket.emit('log', audio_info)
     },
     show_check_panel: function (check_state) {
       this.$refs.reset.force_hide = true
