@@ -75,13 +75,9 @@ def on_spawn_learner(config_filename):
     full_config_file = os.path.join(CONFIG_FOLDER, config_filename)
     learner_manager.spawn(room_id, full_config_file)
 
-@socketio.on('open_lock')
-def on_open_lock():
-    lock_tools.open()
-
-@socketio.on('close_lock')
-def on_close_lock():
-    lock_tools.close()
+@socketio.on('open_vault')
+def on_open_vault():
+    lock_tools.vault.open_lock()
 
 
 if __name__ == '__main__':

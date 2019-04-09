@@ -121,6 +121,11 @@ export default {
 
           if (check_state == 'valid') {
             this.valid_audio.play()
+
+            setTimeout( () => {
+              this.$socket.emit('open_vault')
+            }, 200);
+
           } else if (check_state == 'invalid') {
             this.invalid_audio.play()
           }

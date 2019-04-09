@@ -61,7 +61,7 @@ export default {
     level: function () {
       var config_file = this.$route.params.pathMatch
       var number_in_config_file = config_file.match(/\d/) // regex
-      return 6
+      // return 6
       return parseInt(number_in_config_file, 10) // convert str to int
     }
   },
@@ -78,7 +78,6 @@ export default {
       if (code_info.apply_pause) {
         this.$refs.digit.show_digit = false
         this.$refs.pad.paused = true // disable the pad button
-
 
         setTimeout( () => {
           console.log(code_info)
