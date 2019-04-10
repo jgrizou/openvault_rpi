@@ -18,7 +18,7 @@ try:
     LED_PIN = 20
     GPIO.setup(LED_PIN, GPIO.OUT, initial=GPIO.LOW)
 
-    LOCK_PIN = 21
+    LOCK_PIN = 16
     GPIO.setup(LOCK_PIN, GPIO.OUT, initial=GPIO.LOW)
 
     BUTTON_PIN = 26
@@ -60,9 +60,9 @@ try:
                 self.close_lock()
 
         def open_lock(self):
+            self.unlock_time = time.time()
             GPIO.output(LOCK_PIN, GPIO.HIGH)
             self.waiting_for_door_to_open = True
-            self.unlock_time = time.time()
 
         def close_lock(self):
             GPIO.output(LOCK_PIN, GPIO.LOW)

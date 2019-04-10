@@ -50,6 +50,10 @@ http://www.knight-of-pi.org/update-autostart-chromium-for-full-screen-applicatio
 https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk
 
 
+## I2C sound
+
+https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/
+
 # Packages
 
 ## Python

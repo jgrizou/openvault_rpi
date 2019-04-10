@@ -67,9 +67,9 @@ export default {
       active: false,
       show_button: false,
       loader_audio: new Audio("/audio/drum.wav"),
-      valid_audio: new Audio("/audio/unlock.mp3"),
-      invalid_audio: new Audio("/audio/fart.mp3"),
-      inconsistent_audio: new Audio("/audio/sneeze.mp3")
+      valid_audio: new Audio("/audio/unlock.wav"),
+      invalid_audio: new Audio("/audio/fart.wav"),
+      inconsistent_audio: new Audio("/audio/sneeze.wav")
     }
   },
   methods: {
@@ -92,6 +92,7 @@ export default {
 
         setTimeout( () => {
           this.smiley_state = check_state
+          this.inconsistent_audio.currentTime = 0
           this.inconsistent_audio.play()
         }, slide_timeout_ms);
 
@@ -120,13 +121,15 @@ export default {
           this.smiley_state = check_state
 
           if (check_state == 'valid') {
+            this.valid_audio.currentTime = 0
             this.valid_audio.play()
 
             setTimeout( () => {
               this.$socket.emit('open_vault')
-            }, 200);
+            }, 1200);
 
           } else if (check_state == 'invalid') {
+            this.invalid_audio.currentTime = 0
             this.invalid_audio.play()
           }
 
