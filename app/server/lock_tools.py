@@ -13,12 +13,12 @@ try:
     import RPi.GPIO as GPIO
 
     GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
+    # GPIO.setwarnings(False)
 
-    LED_PIN = 20
+    LED_PIN = 6
     GPIO.setup(LED_PIN, GPIO.OUT, initial=GPIO.LOW)
 
-    LOCK_PIN = 16
+    LOCK_PIN = 12
     GPIO.setup(LOCK_PIN, GPIO.OUT, initial=GPIO.LOW)
 
     BUTTON_PIN = 26
@@ -50,6 +50,15 @@ try:
                     self.close_lock()
                 time.sleep(0.1)
 
+        def close(self):
+            GPIO.cleanup()
+
+        def __del__(self):
+            self.close()
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self.close()
+
         def stop(self):
             self.interrupted.release()
 
@@ -74,7 +83,9 @@ try:
         def set_led_to_door_state(self):
             GPIO.output(LED_PIN, GPIO.input(BUTTON_PIN))
 
-except:
+except Exception as e:
+
+    print(e)
 
     class Vault():
 

@@ -13,7 +13,7 @@ duckdns_log_file=/home/pi/workspace/openvault_rpi/logs/duckdns.log
 printf "### CRON START ### \n\n"
 
 # fetching wlan local ip
-ip=$(/sbin/ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+ip=$(/sbin/ifconfig wlan0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
 printf "IP = $ip \n\n"
 

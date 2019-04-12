@@ -21,6 +21,11 @@ Info:
 - Make sure /etc/wpa_supplicant/wpa_supplicant.conf does not exist
 - Use interface to configure as per CRI website: https://cri-paris.freshservice.com/support/solutions/articles/10000001839-how-can-i-access-the-wifi-
 
+Force wifi to activate
+- sudo rfkill unblock 0  ## 0 is the Wireless LAN, check with rfkill list
+- sudo ifconfig wlan0 up  ## enable wlan0
+- sudo nmcli radio wifi on  ## network manager enable wifi
+
 
 # Enable SSH
 
