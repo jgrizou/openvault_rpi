@@ -88,7 +88,7 @@ export default {
 }
 
 .reset-btn:active {
-  background-color: var(--tile_color);
+  background-color: rgba(150, 150, 150, 1);
 }
 
 .reset-text {
