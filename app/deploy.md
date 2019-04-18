@@ -27,19 +27,14 @@ $ sudo ufw allow http
 $ sudo ufw --force enable
 $ sudo ufw status
 
-
 $ sudo apt-get -y update
 $ sudo apt-get -y install supervisor nginx
 
-## miniconda
-
-https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart
-
+## miniconda3
 
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 chmod +x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda-latest-Linux-x86_64.sh
-
 
 source ~/.bashrc
 conda create --name openvault_deploy python=3.7
@@ -80,9 +75,6 @@ git clone git@github.com:jgrizou/openvault_rpi.git
 
 npm install
 npm run build
-
-
-
 
 ## supervisor config
 
