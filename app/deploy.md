@@ -98,6 +98,8 @@ sudo supervisorctl tail openvault stdout
 
 systemctl status supervisor
 systemctl stop supervisor
+systemctl start supervisor
+systemctl restart supervisor
 
 
 ## NGINX

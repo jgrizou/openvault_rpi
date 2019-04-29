@@ -92,7 +92,7 @@ except Exception as e:
         def __init__(self):
             pass
 
-        def open_lock():
+        def open_lock(self):
             print('Opening Vault')
 
 # create vault instance
