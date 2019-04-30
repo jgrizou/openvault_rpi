@@ -9,12 +9,14 @@ import sys
 openvault_path = os.path.join(HERE_PATH, '..', '..', '..')
 sys.path.append(openvault_path)
 
+import time
 import random
 
 from flask import request
 from flask_socketio import Namespace, emit
 
 from tools import read_config
+# from log_tools import Logger
 
 from openvault.discrete import DiscreteLearner
 
@@ -60,9 +62,13 @@ class Learner(object):
         self.socketio = socketio
         self.room_id = room_id
         self.config_filename = config_filename
+        # self.logger = Logger(self)
         self.reset()
 
     def reset(self):
+        ## save before reseting if applicable
+        # self.logger.log_on_reset()
+        ## reset procedure
         print('[{}] Starting learner from {}'.format(self.room_id, self.config_filename))
         self.config = read_config(self.config_filename)
         self.code_manager = CodeManager(self.config['code'])
@@ -70,6 +76,9 @@ class Learner(object):
         self.start()
 
     def init_learner(self):
+        ## save learner info before reinit_learner
+        # self.logger.log_on_init_learner()
+        ##
         learner_info = self.config['learner']
         if learner_info['type'] == 'discrete':
             self.learner = DiscreteLearner(
@@ -79,6 +88,7 @@ class Learner(object):
             raise Exception('Learner of type {} not handled'. format(learner_info['type']))
 
     def start(self):
+        self.start_time = time.time()
         self.update_iteration(new_iteration_value=0)
         self.update_code(apply_pause=False)
         self.update_pad()

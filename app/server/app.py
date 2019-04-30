@@ -4,15 +4,6 @@ import os
 import inspect
 HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-# we will keep a simple database of rooms used
-# 1 room == 1 user
-from tinydb import TinyDB, where
-from tinyrecord import transaction
-
-ROOM_DATABASE_FILE = os.path.join(HERE_PATH, 'rooms.json')
-database = TinyDB(ROOM_DATABASE_FILE)
-database.purge()
-
 # we initialize the web server
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room
@@ -48,9 +39,7 @@ def serve_static(path):
 def on_connect():
     room_id = request.sid
     join_room(room_id)
-    with transaction(database) as tr:
-        tr.insert({'room_id': room_id})
-    print('{} clients connected'.format(len(database.all())))
+
 
 # on disconnect, leave room, update database
 # delete the learner for this room if created
@@ -58,10 +47,7 @@ def on_connect():
 def on_disconnect():
     room_id = request.sid
     leave_room(room_id)
-    with transaction(database) as tr:
-        tr.remove(where('room_id') == room_id)
     learner_manager.kill(room_id)
-    print('{} clients connected'.format(len(database.all())))
 
 
 @socketio.on('get_configs')

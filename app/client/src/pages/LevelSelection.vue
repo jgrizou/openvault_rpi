@@ -17,12 +17,6 @@ export default {
     };
   },
   sockets: {
-    connect: function () {
-      console.log('## Socket connected')
-    },
-    disconnect: function () {
-      console.log('## Socket disconnected')
-    },
     set_configs: function (configs){
       this.configs = configs
     }

@@ -80,7 +80,6 @@ export default {
         this.$refs.pad.paused = true // disable the pad button
 
         setTimeout( () => {
-          console.log(code_info)
           this.$refs.display.code = code_info.code_json
         }, 50);
 
