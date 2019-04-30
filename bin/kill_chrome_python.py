@@ -2,3 +2,4 @@
 
 pkill chromium
 pkill python
+pkill gunicorn
