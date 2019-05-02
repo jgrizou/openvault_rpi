@@ -120,8 +120,16 @@ export default {
       this.$socket.emit('feedback_info', feedback_info)
     },
     continuous_pad_callback: function (click_info) {
-      // this.$refs.pad.awaiting_flash = true // disable the pad button
-      this.$socket.emit('log', click_info)
+      this.$refs.pad.awaiting_flash = true // disable the pad
+
+      var feedback_info = {}
+      var x_click = click_info.relative_click.x
+      var y_click = click_info.relative_click.y
+      feedback_info.signal = [x_click, y_click]
+      feedback_info.flash = this.$refs.digit.flash
+      this.$socket.emit('feedback_info', feedback_info)
+
+      this.$socket.emit('log', feedback_info)
     },
     audio_pad_callback: function (audio_info) {
       this.$socket.emit('log', audio_info)

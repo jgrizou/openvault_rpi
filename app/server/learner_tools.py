@@ -19,7 +19,7 @@ from tools import read_config
 # from log_tools import Logger
 
 from openvault.discrete import DiscreteLearner
-
+from openvault.continuous import ContinuousLearner
 
 class LearnerManager(Namespace):
 
@@ -84,6 +84,9 @@ class Learner(object):
             self.learner = DiscreteLearner(
                 learner_info['n_hypothesis'],
                 learner_info['known_symbols'])
+        elif learner_info['type'] == 'continuous':
+            self.learner = ContinuousLearner(
+                learner_info['n_hypothesis'])
         else:
             raise Exception('Learner of type {} not handled'. format(learner_info['type']))
 
@@ -106,13 +109,12 @@ class Learner(object):
                 self.socketio.emit('check', 'inconsistent', room=self.room_id)
 
             if self.learner.is_solved():
+                # get the code info
                 self.update_code()
-                self.update_known_symbols()
-                # restart the learner for next number
-                self.init_learner()
-
-                print(self.config['learner']['known_symbols'])
                 print(self.code_manager.decoded_code)
+
+                # prepare learner for next digit
+                self.prepare_learner_for_next_digit()
 
             if self.code_manager.is_code_decoded():
                 if self.code_manager.is_code_valid():
@@ -123,14 +125,6 @@ class Learner(object):
                 self.update_pad()
                 self.update_flash_pattern()
 
-    def update_known_symbols(self):
-        # update the known_symbols if needed
-        learner_info = self.config['learner']
-        if learner_info['accumulate_known_symbols_between_numbers']:
-            solution_index = self.learner.get_solution_index()
-            learner_info['known_symbols'] = self.learner.compute_symbols_belief_for_hypothesis(solution_index)
-        print(self.config['learner'])
-
     def update_iteration(self, new_iteration_value):
         self.n_iteration = new_iteration_value
         self.socketio.emit('n_iteration', self.n_iteration, room=self.room_id)
@@ -138,17 +132,43 @@ class Learner(object):
     def update_flash_pattern(self):
         self.socketio.emit(
             'update_flash',
-            self.learner.get_next_flash_pattern(),
+            self.learner.get_next_flash_pattern(planning_method='even_uncertainty'),
             room=self.room_id)
 
     def update_learner(self, feedback_info):
 
         displayed_flash_patterns = feedback_info['flash']
-        feedback_symbol = feedback_info['symbol']
 
-        # print('##### Updating {} for {} with {}'.format(self.room_id, displayed_flash_patterns, feedback_symbol))
+        learner_info = self.config['learner']
+        if learner_info['type'] == 'discrete':
+            feedback_symbol = feedback_info['symbol']
+            self.learner.update(displayed_flash_patterns, feedback_symbol)
+            # print('##### Updating {} for {} with {}'.format(self.room_id, displayed_flash_patterns, feedback_symbol))
+        elif learner_info['type'] == 'continuous':
+            feedback_signal = feedback_info['signal']
+            self.learner.update(displayed_flash_patterns, feedback_signal)
 
-        self.learner.update(displayed_flash_patterns, feedback_symbol)
+    def prepare_learner_for_next_digit(self):
+
+        learner_info = self.config['learner']
+        if learner_info['type'] == 'discrete':
+            # if required, update known symbols with acquired ones
+            if learner_info['accumulate_known_symbols_between_numbers']:
+                solution_index = self.learner.get_solution_index()
+                learner_info['known_symbols'] = self.learner.compute_symbols_belief_for_hypothesis(solution_index)
+            # restart a new learner (with the original or new symbols set if update above)
+            self.init_learner()
+            print(self.config['learner']['known_symbols'])
+
+        elif learner_info['type'] == 'continuous':
+            if learner_info['accumulate_info_between_numbers']:
+                solution_index = self.learner.get_solution_index()
+                self.learner.propagate_labels_from_hypothesis(solution_index)
+            else:
+                # spawn a new learner from scratch
+                self.init_learner()
+        else:
+            raise Exception('Learner of type {} not handled'. format(learner_info['type']))
 
     def update_code(self, apply_pause=True):
         # if new digit found
@@ -160,26 +180,27 @@ class Learner(object):
         code_info['code_json'] = self.code_manager.code_json
         code_info['apply_pause'] = apply_pause
 
-        self.socketio.emit(
-            'update_code',
-            code_info,
-            room=self.room_id)
+        self.socketio.emit('update_code', code_info, room=self.room_id)
+
 
     def update_pad(self):
         pad_info = self.config['pad']
         if pad_info['show_learning_progress']:
             learner_info = self.config['learner']
-            known_symbols = learner_info['known_symbols']
 
-            FLASH_TO_COLOR = {}
-            FLASH_TO_COLOR[True] = 'flash'
-            FLASH_TO_COLOR[False] = 'noflash'
+            if learner_info['type'] == 'discrete':
+                known_symbols = learner_info['known_symbols']
 
-            pad_color = ['neutral' for _ in range(pad_info['n_pad'])]
-            for k, v in known_symbols.items():
-                pad_color[int(k)] = FLASH_TO_COLOR[v]
-            print(pad_color)
-            self.socketio.emit('update_pad', pad_color, room=self.room_id)
+                FLASH_TO_COLOR = {}
+                FLASH_TO_COLOR[True] = 'flash'
+                FLASH_TO_COLOR[False] = 'noflash'
+
+                pad_color = ['neutral' for _ in range(pad_info['n_pad'])]
+                for k, v in known_symbols.items():
+                    pad_color[int(k)] = FLASH_TO_COLOR[v]
+                print(pad_color)
+                self.socketio.emit('update_pad', pad_color, room=self.room_id)
+
 
 
 class CodeManager(object):

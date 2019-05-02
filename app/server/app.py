@@ -11,8 +11,6 @@ from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room
 from tools import SERVE_FOLDER, CONFIG_FOLDER, get_configs
 app = Flask(__name__, static_folder=SERVE_FOLDER, template_folder=SERVE_FOLDER, static_url_path='')
 
-app.config['SECRET_KEY'] = 'secret!'
-
 socketio = SocketIO(app)
 
 # we initialise the learner and pass the instance of socketio
