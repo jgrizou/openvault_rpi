@@ -132,7 +132,8 @@ export default {
       this.$socket.emit('log', feedback_info)
     },
     audio_pad_callback: function (audio_info) {
-      this.$socket.emit('log', audio_info)
+      // this.$socket.emit('log', audio_info)
+      this.$socket.emit('mp3', audio_info)
     },
     show_check_panel: function (check_state) {
       this.$refs.reset.force_hide = true

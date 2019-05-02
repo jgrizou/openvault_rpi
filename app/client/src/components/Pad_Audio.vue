@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      recorder: new MicRecorder({bitRate: 128})
+      recorder: new MicRecorder()
     }
   },
   methods: {
@@ -39,11 +39,20 @@ export default {
       this.recorder.start().then(() => {
         // something else
         console.log("RECORDING")
+
+        this.buffer_check = setInterval( () => {
+          var info = this.recorder.lameEncoder.dataBuffer
+          console.log(info)
+        }, 1000);
+
       }).catch((e) => {
         console.error(e);
       });
     },
     on_mouseup: function () {
+
+      clearInterval(this.buffer_check)
+
       // Once you are done singing your best song, stop and get the mp3.
       this.recorder.stop().getMp3().then(([buffer, blob]) => {
 
@@ -51,10 +60,15 @@ export default {
 
         // do what ever you want with buffer and blob
         // Example: Create a mp3 file and play
-        const file = new File(buffer, 'me-at-thevoice.mp3', {
+        const file = new File(buffer, 'test.mp3', {
           type: blob.type,
           lastModified: Date.now()
         });
+
+        var audio_info = {}
+        audio_info.mp3 = file
+
+        this.callback(audio_info)
 
         const player = new Audio(URL.createObjectURL(file));
         player.play();
@@ -114,8 +128,8 @@ export default {
 
 .btn_micro_ready:active {
   background-color: rgba(226, 73, 73, 1);
-  animation: recording 2s;
-  -webkit-animation:recording 2s infinite;
+  animation: recording 1.8s;
+  -webkit-animation:recording 1.8s infinite;
 }
 
 @-webkit-keyframes recording {
