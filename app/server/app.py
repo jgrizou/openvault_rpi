@@ -63,11 +63,6 @@ def on_spawn_learner(config_filename):
 def on_open_vault():
     lock_tools.vault.open_lock()
 
-@socketio.on('mp3')
-def on_open_vault(data):
-    with open('test.mp3', 'wb') as f:
-        f.write(data['mp3'])
-    print(data)
 
 if __name__ == '__main__':
     print('Flask is running in python')
