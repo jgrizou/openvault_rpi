@@ -1,8 +1,8 @@
 {
-  "name": "Level 4 - Visible",
+  "name": "Discovery Day 2019",
   "code": {
-    "secret_code": [4, 6, 5, 3],
-    "show_code": true
+    "secret_code": [2, 6, 8, 5],
+    "show_code": false
   },
   "learner": {
     "type": "discrete",

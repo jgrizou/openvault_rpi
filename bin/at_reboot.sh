@@ -17,7 +17,8 @@ flask_log_file="/home/pi/workspace/openvault_rpi/logs/flask.log"
 
 # url="http://127.0.0.1:5000/" # when served via flask
 # url="http://127.0.0.1:1234/" # when served via npm run dev
-url="http://127.0.0.1:5000/#/ui/level_2.json"
+# url="http://127.0.0.1:5000/#/ui/demo_level_3.json"
+url="http://127.0.0.1:5000/#/ui/discovery_day_2019.json"
 
 ## FLASK
 

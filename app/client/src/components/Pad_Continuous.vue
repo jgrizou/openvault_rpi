@@ -57,8 +57,8 @@ export default {
       var radius          = width // in px
 
       // modified center for the rpi screen that is 90degree rotated
-      // var ripple_center_X = (1 - relative_click.y) * width
-      // var ripple_center_Y = relative_click.x * height
+      var ripple_center_X = (1 - relative_click.y) * width
+      var ripple_center_Y = relative_click.x * height
 
       //Ripple
       var rippleEffect = document.createElement("div");

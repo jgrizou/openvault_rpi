@@ -126,7 +126,7 @@ export default {
 
             setTimeout( () => {
               this.$socket.emit('open_vault')
-            }, 1200);
+            }, 0);
 
           } else if (check_state == 'invalid') {
             this.invalid_audio.currentTime = 0
