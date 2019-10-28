@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(color, index) in pad_color">
+    <div v-for="(color, index) in button_color">
 
       <button
         :class="{
@@ -31,9 +31,10 @@ export default {
     return {
       paused: false,
       awaiting_flash: false,
-      pad_color: ['noflash', 'flash'],
-      pad_color_1: ['noflash', 'flash'],
-      pad_color_2: ['flash', 'noflash'],
+      button_color: ['noflash', 'flash'],
+      button_color_1: ['noflash', 'flash'],
+      button_color_2: ['flash', 'noflash'],
+      button_color_history: []
     }
   },
   computed: {
@@ -46,14 +47,37 @@ export default {
       var click_info = {}
       click_info.button = button_name
       this.callback(click_info)
-      this.toggle_pad_color()
+      this.update_button_color()
     },
-    toggle_pad_color: function () {
-      if (this.pad_color === this.pad_color_2) {
-        this.pad_color = this.pad_color_1
+    toggle_button_color: function () {
+      if (this.button_color === this.button_color_2) {
+        this.button_color = this.button_color_1
       } else {
-        this.pad_color = this.pad_color_2
+        this.button_color = this.button_color_2
       }
+    },
+    update_button_color: function () {
+      // we do random color but limit to a maximum of twice the same color in a row
+      var new_button_color
+      if ( Math.random() < 0.5 ) {
+        new_button_color = this.button_color_1
+      } else {
+        new_button_color = this.button_color_2
+      }
+      // check two last values
+      var last_two_colors = this.button_color_history.slice(-2)
+      if (last_two_colors.length > 1) {
+        if (last_two_colors[0] == last_two_colors[1]) {
+          // if new color is the same as two previous ones
+          if (new_button_color == last_two_colors[1]) {
+            // flip it
+            new_button_color = [new_button_color[1], new_button_color[0]]
+          }
+        }
+      }
+      // assign values
+      this.button_color = new_button_color
+      this.button_color_history.push(new_button_color)
     }
   }
 }

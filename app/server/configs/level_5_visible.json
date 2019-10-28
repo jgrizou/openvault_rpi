@@ -1,7 +1,7 @@
 {
   "name": "Level 5 - Visible",
   "code": {
-    "secret_code": [2, 3, 1, 0],
+    "secret_code": [2, 0, 1, 4],
     "show_code": true
   },
   "learner": {

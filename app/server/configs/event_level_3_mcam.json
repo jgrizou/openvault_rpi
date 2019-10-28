@@ -1,7 +1,7 @@
 {
-  "name": "Discovery Day - Level 4",
+  "name": "Event - Level 3 - McaM",
   "code": {
-    "secret_code": [2, 6, 8, 5],
+    "secret_code": [0, 6, 8, 9],
     "show_code": false
   },
   "learner": {
@@ -12,6 +12,6 @@
   },
   "pad": {
     "n_pad": 9,
-    "show_learning_progress": false
+    "show_learning_progress": true
   }
 }
