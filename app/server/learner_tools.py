@@ -158,7 +158,7 @@ class Learner(object):
                 learner_info['known_symbols'] = self.learner.compute_symbols_belief_for_hypothesis(solution_index)
             # restart a new learner (with the original or new symbols set if update above)
             self.init_learner()
-            print(self.config['learner']['known_symbols'])
+            # print(self.config['learner']['known_symbols'])
 
         elif learner_info['type'] == 'continuous':
             if learner_info['accumulate_info_between_numbers']:
@@ -198,7 +198,7 @@ class Learner(object):
                 pad_color = ['neutral' for _ in range(pad_info['n_pad'])]
                 for k, v in known_symbols.items():
                     pad_color[int(k)] = FLASH_TO_COLOR[v]
-                print(pad_color)
+                # print(pad_color)
                 self.socketio.emit('update_pad', pad_color, room=self.room_id)
 
 

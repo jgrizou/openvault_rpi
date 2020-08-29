@@ -1,3 +1,47 @@
+# Procedure on RPI4
+
+// enable ssh
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+// install conda
+wget https://github.com/jjhelmus/berryconda/releases/download/v2.0.0/Berryconda3-2.0.0-Linux-armv7l.sh
+chmod +x Berryconda3-2.0.0-Linux-armv7l.sh
+./Berryconda3-2.0.0-Linux-armv7l.sh
+
+// pull repo
+mkdir workspace
+git clone https://github.com/jgrizou/openvault.git
+git clone https://github.com/jgrizou/openvault_rpi.git
+
+// instal dependencies
+cd openvault_rpi
+conda env create -f environment.yml
+
+// activate the openvault_rpi env!!!!
+source /home/pi/berryconda3/bin/activate openvault_rpi
+
+
+conda install scipy
+conda install scikit-learn
+
+pip install flask
+pip install flask-socketio
+pip install eventlet
+pip install gunicorn
+
+pip install tinydb
+pip install rpi.gpio
+
+// sudo reboot
+
+// compile client side
+cd openvault_rpi/app/client
+npm update
+npm install
+npm run build
+
+
 # Script to run at startup
 
 See bin/at_reboot.sh
