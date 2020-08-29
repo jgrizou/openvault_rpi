@@ -6,9 +6,9 @@
 
 ## Enable Wifi
 
-sudo rfkill unblock 0 # 0 is the Wireless LAN, check with rfkill list
-sudo ifconfig wlan0 up
-sudo nmcli radio wifi on ## network manager enable wifi
+# sudo rfkill unblock 0 # 0 is the Wireless LAN, check with rfkill list
+# sudo ifconfig wlan0 up
+# sudo nmcli radio wifi on ## network manager enable wifi
 
 ## Parameters
 
